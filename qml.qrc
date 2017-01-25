@@ -2,5 +2,17 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>qtquickcontrols2.conf</file>
+        <file>img/atomic.png</file>
+        <file>img/rocket.png</file>
+        <file>img/satelite.png</file>
+        <file>img/SX Systems.png</file>
+        <file>img/Telescope 3.jpg</file>
+        <file>img/Warning.png</file>
+        <file>Pages/PageStateOverview.qml</file>
+        <file>Pages/PageStart.qml</file>
+        <file>Elems/ElemStateOverview.qml</file>
+        <file>main.cpp</file>
+        <file>img/ic_add_circle_white_3x.png</file>
+        <file>sxsystems.db</file>
     </qresource>
 </RCC>
