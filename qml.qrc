@@ -14,5 +14,7 @@
         <file>main.cpp</file>
         <file>img/ic_add_circle_white_3x.png</file>
         <file>sxsystems.db</file>
+        <file>Pages/PageAddState.qml</file>
+        <file>img/ic_arrow_back_white_24dp_1x.png</file>
     </qresource>
 </RCC>

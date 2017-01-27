@@ -11,6 +11,8 @@ Rectangle {
     property alias txtAlliance: txtAlliance.text
     property alias txtMilitary: txtMilitary.text
 
+    property int stateid: -1
+
     readonly property int trennWidth: 1
     readonly property int topBottomMargin: 5
     readonly property int leftRightMargin: 3
@@ -73,7 +75,7 @@ Rectangle {
     MouseArea {
         id: mouseArea
         anchors.fill: parent;
-        onClicked: print("Meine Farbe: " + parent.color)
+        onClicked: print("Staatsid: " + id)
 
         Text {
             id: txtState

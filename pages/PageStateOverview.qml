@@ -75,8 +75,9 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                print("Add clicked")
-                network.test()
+                stackView.push("qrc:/Pages/PageAddState.qml")
+                //network.test()
+                //countryModel.addCountry(1234);
             }
 
         }
@@ -102,52 +103,16 @@ Rectangle {
         cellWidth: 300
 
 
-        model: ListModel {
-            ListElement {
-                name: "Staat 0"
-                alliance: "Allianz 0"
-                military: 1234567
-                hasAtomicBomb: true
-                hasRockets: true
-                hasSatellite: true
-            }
-
-            ListElement {
-                name: "Staat 1"
-                alliance: "Allianz 0"
-                military: 1234567
-                hasAtomicBomb: false
-                hasRockets: true
-                hasSatellite: false
-            }
-
-            ListElement {
-                name: "Staat 2"
-                alliance: "Allianz 1"
-                military: 1234567
-                hasAtomicBomb: true
-                hasRockets: true
-                hasSatellite: false
-            }
-
-            ListElement {
-                name: "Staat 3"
-                alliance: ""
-                military: 1234567
-                hasAtomicBomb: false
-                hasRockets: false
-                hasSatellite: false
-            }
-
-        }
+        model: countryModel
 
         delegate: ElemStateOverview {
-            txtState: name
-            txtAlliance: alliance
-            txtMilitary: military.toLocaleString(Qt.locale("de_DE"))
-            imgSatelliteVisible: hasSatellite
-            imgRocketVisible: hasRockets
-            imgAtomicbombVisible: hasAtomicBomb
+            txtState: model.name
+            txtAlliance: model.alliance
+            txtMilitary: model.military.toLocaleString(Qt.locale("de_DE"))
+            imgSatelliteVisible: model.hasSatellite
+            imgRocketVisible: model.hasRocket
+            imgAtomicbombVisible: model.hasAtomic
+            stateid: model.id
         }
 
 
@@ -165,6 +130,5 @@ Rectangle {
 
         onClicked: stackView.pop();
     }
-
 
 }

@@ -9,6 +9,9 @@
 #include <QDir>
 #include <QDebug>
 #include <QStandardPaths>
+#include <QList>
+
+#include "country.h"
 
 class DBConnector : public QObject
 {
@@ -26,6 +29,7 @@ public:
 
     QString getToken() const;
     Q_INVOKABLE void writeToken(const QString &token) const;
+    QList<Country *> getCountries() const;
 
 private:
     QSqlDatabase db;

@@ -41,7 +41,6 @@ QSqlError DBConnector::lastError() const {
 
 QString DBConnector::getToken() const {
     QSqlQuery query("SELECT token FROM tblToken;", db);
-    qDebug() << "LastError: " << query.lastError();
 
     if (query.first()) {
         return query.value(0).toString();
@@ -79,4 +78,33 @@ void DBConnector::createDB() const {
         QFile file(getDBPath());
         file.setPermissions(QFile::WriteUser);
     }
+}
+
+QList<Country*> DBConnector::getCountries() const {
+    QList<Country*> retList;
+
+    QSqlQuery query("SELECT * FROM tblCountry;");
+    while(query.next()) {
+        int cid = query.value("ID").toInt();
+        float cmilitary = query.value("Military").toFloat();
+        bool chasatomic = (query.value("HasAtomic").toInt() > 0) ? true : false;
+        bool chasrocket = (query.value("HasRocket").toInt() > 0) ? true : false;
+        bool chassatellite = (query.value("HasSatellite").toInt() > 0) ? true : false;
+        QString cname = query.value("Name").toString();
+        QString calliance = query.value("Alliance").toString();
+
+
+        Country *country = new Country();
+        country->setID(cid);
+        country->setMilitary(cmilitary);
+        country->setHasAtomic(chasatomic);
+        country->setHasRocket(chasrocket);
+        country->setHasSatellite(chassatellite);
+        country->setName(cname);
+        country->setAlliance(calliance);
+
+        retList.append(country);
+    }
+
+    return retList;
 }

@@ -4,7 +4,9 @@ CONFIG += c++11
 
 SOURCES += main.cpp \
     dbconnector.cpp \
-    network.cpp
+    network.cpp \
+    country.cpp \
+    countrymanager.cpp
 
 RESOURCES += qml.qrc
 
@@ -32,4 +34,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     dbconnector.h \
-    network.h
+    network.h \
+    country.h \
+    countrymanager.h
