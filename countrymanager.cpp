@@ -7,12 +7,14 @@ const int CountryManager::HasRocket     = Qt::UserRole + 4;
 const int CountryManager::HasSatellite  = Qt::UserRole + 5;
 const int CountryManager::Name          = Qt::UserRole + 6;
 const int CountryManager::Military      = Qt::UserRole + 7;
+const int CountryManager::Muster        = Qt::UserRole + 8;
 
-CountryManager::CountryManager(DBConnector *dbcon, QObject *parent)
+CountryManager::CountryManager(DBConnector *dbcon, Network *network, QObject *parent)
     : QAbstractListModel(parent)
     , m_dbcon(dbcon)
+    , m_network(network)
 {
-
+    connect(network, SIGNAL(gotCountry(Country*)), this, SLOT(onGotCountry(Country*)));
 }
 
 void CountryManager::getCountriesFromDB() {
@@ -26,20 +28,74 @@ void CountryManager::getCountriesFromDB() {
     }
 }
 
-void CountryManager::addCountry(int id, QString alliance) {
-    Country *testcountry = new Country();
-    testcountry->setID(id);
-    testcountry->setName("Teststaat #" + QString::number(id));
-    testcountry->setHasAtomic(false);
-    testcountry->setHasRocket(true);
-    testcountry->setHasSatellite(false);
-    testcountry->setAlliance(alliance);
+void CountryManager::updateCountriesAlliance(const int &id, const QString &alliance)
+{
+    int indx = 0;
+    for(Country* country : m_lstCountries) {
+        if (country->getID() == id) {
+            country->setAlliance(alliance);
+            m_dbcon.data()->updateCountry(country);
+
+            QVector<int> roles;
+            roles.append(Alliance);
+
+            dataChanged(this->index(indx, indx), this->index(indx, indx), roles);
+            return;
+        }
+        indx++;
+    }
+}
+
+void CountryManager::onGotCountry(Country *country) {
+    country->print();
+
+    if (!m_dbcon.isNull())
+        m_dbcon.data()->addCountry(country);
+
+    if (isCountryAlreadyInList(country))
+        return updateCountryWith(country);
 
     beginInsertRows(QModelIndex(), m_lstCountries.size(), m_lstCountries.size());
-    m_lstCountries.append(testcountry);
+    m_lstCountries.append(country);
     endInsertRows();
 }
 
+bool CountryManager::isCountryAlreadyInList(Country *country) const {
+    foreach (Country* ctr, m_lstCountries) {
+        if (ctr->getID() == country->getID())
+            return true;
+    }
+    return false;
+}
+
+void CountryManager::updateCountryWith(Country *country) {
+    int indx = 0;
+    foreach (Country* ctr, m_lstCountries) {
+        if (ctr->getID() == country->getID()) {
+            ctr->setName(country->getName());
+            ctr->setAlliance(country->getAlliance());
+            ctr->setMilitary(country->getMilitary());
+            ctr->setHasAtomic(country->getHasAtomic());
+            ctr->setHasRocket(country->getHasRocket());
+            ctr->setHasSatellite(country->getHasSatellite());
+
+            QVector<int> roles;
+            roles.append(Name);
+            roles.append(Alliance);
+            roles.append(Military);
+            roles.append(HasAtomic);
+            roles.append(HasRocket);
+            roles.append(HasSatellite);
+            roles.append(Muster);
+
+            m_dbcon.data()->updateCountry(ctr);
+
+            dataChanged(this->index(indx, indx), this->index(indx, indx), roles);
+            return;
+        }
+        indx++;
+    }
+}
 
 QHash<int, QByteArray> CountryManager::roleNames() const {
     QHash<int, QByteArray> roles = QAbstractListModel::roleNames();
@@ -50,6 +106,7 @@ QHash<int, QByteArray> CountryManager::roleNames() const {
     roles.insert(HasSatellite, QByteArray("hasSatellite"));
     roles.insert(Name, QByteArray("name"));
     roles.insert(Military, QByteArray("military"));
+    roles.insert(Muster, QByteArray("muster"));
 
     return roles;
 }
@@ -83,6 +140,8 @@ QVariant CountryManager::data(const QModelIndex &index, int role) const {
         return QVariant::fromValue(country->getName());
     case Military:
         return QVariant::fromValue(country->getMilitary());
+    case Muster:
+        return QVariant::fromValue(country->getMuster());
 
     default:
         return QVariant();

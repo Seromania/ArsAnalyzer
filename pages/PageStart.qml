@@ -11,7 +11,7 @@ Rectangle {
     }
 
     Component.onCompleted: {
-        txtApiToken.text = dbCon.token
+        txtApiToken.text = network.token
         if (txtApiToken.text !== "") {
             pushToOverview()
         }
@@ -71,7 +71,7 @@ Rectangle {
     Connections {
         target: button
         onReleased: {
-            dbCon.writeToken(txtApiToken.text)
+            network.writeToken(txtApiToken.text)
             pushToOverview()
         }
     }

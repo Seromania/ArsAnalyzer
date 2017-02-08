@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 
     DBConnector* dbcon = new DBConnector();
     Network* network = new Network(dbcon);
-    CountryManager* cmanager = new CountryManager(dbcon);
+    CountryManager* cmanager = new CountryManager(dbcon, network);
 
     if(!dbcon->openDB())
         qDebug() << "Fehler: " << dbcon->lastError();
@@ -27,7 +27,6 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     QQmlContext* context = engine.rootContext();
-    context->setContextProperty("dbCon", dbcon);
     context->setContextProperty("network", network);
     context->setContextProperty("countryModel", cmanager);
 

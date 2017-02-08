@@ -9,7 +9,9 @@ Rectangle {
     property alias imgAtomicbombVisible: imgAtomicbomb.visible
     property alias txtState: txtState.text
     property alias txtAlliance: txtAlliance.text
+    property alias txtFieldAlliance: txtFieldAlliance.text
     property alias txtMilitary: txtMilitary.text
+    property alias txtMuster: txtMuster.text
 
     property int stateid: -1
 
@@ -20,6 +22,22 @@ Rectangle {
     width: 300
     height: 180
 
+    function changeEditAlliance() {
+        if (txtAlliance.visible === true) {
+            txtEditAlliance.text = "Speichern"
+            txtAlliance.visible = false
+            txtFieldAlliance.enabled = true
+            txtFieldAlliance.visible = true
+        } else {
+            txtEditAlliance.text = "Editieren"
+            txtAlliance.visible = true
+            txtFieldAlliance.enabled = false
+            txtFieldAlliance.visible = false
+
+            countryModel.updateCountriesAlliance(stateid, txtFieldAlliance.text)
+        }
+    }
+
     Rectangle {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
@@ -72,91 +90,169 @@ Rectangle {
         anchors.topMargin: topBottomMargin
     }
 
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent;
-        onClicked: print("Staatsid: " + id)
+    Text {
+        id: txtState
+        color: "#ffffff"
+        text: qsTr("Staat 0")
+        anchors.left: parent.left
+        anchors.leftMargin: 12
+        anchors.top: parent.top
+        anchors.topMargin: 12
+        wrapMode: Text.WordWrap
+        font.pixelSize: 16
+    }
 
-        Text {
-            id: txtState
-            color: "#ffffff"
-            text: qsTr("Staat 0")
-            anchors.left: parent.left
-            anchors.leftMargin: 12
-            anchors.top: parent.top
-            anchors.topMargin: 12
-            wrapMode: Text.WordWrap
-            font.pixelSize: 16
+    Text {
+        id: txtEditAlliance
+        color: "#9D0808"
+        text: qsTr("Editieren")
+        anchors.left: txtState.right
+        anchors.leftMargin: 12
+        anchors.bottom: txtState.bottom
+        wrapMode: Text.WordWrap
+        font.pixelSize: 12
+
+        PropertyAnimation {
+            id: clickAnimClicked
+            target: txtEditAlliance
+            property: "color"
+            to: "#FFF"
+            duration: 200
         }
 
-        Text {
-            id: txtAlliance
-            color: "#ffffff"
-            text: qsTr("Bündnis 0")
-            anchors.left: parent.left
-            anchors.leftMargin: 12
-            anchors.top: txtState.bottom
-            anchors.topMargin: 8
-            wrapMode: Text.WordWrap
-            font.pixelSize: 16
+        PropertyAnimation {
+            id: clickAnimUnclicked
+            target: txtEditAlliance
+            property: "color"
+            to: "#9D0808"
+            duration: 200
         }
 
-        Text {
-            id: txtMilitaryText
-            color: "#ffffff"
-            text: qsTr("Militär:")
-            anchors.top: txtAlliance.bottom
-            anchors.topMargin: 12
-            anchors.left: txtState.left
-            anchors.leftMargin: 0
-            font.pixelSize: 16
+
+        MouseArea {
+            anchors.fill: parent
+
+            onPressed: {
+                clickAnimUnclicked.stop()
+                clickAnimClicked.start()
+            }
+
+            onClicked: {
+                changeEditAlliance()
+            }
+
+            onReleased: {
+                clickAnimClicked.stop()
+                clickAnimUnclicked.start()
+            }
+        }
+    }
+
+    Text {
+        id: txtAlliance
+        color: "#ffffff"
+        text: qsTr("Bündnis 0")
+        anchors.left: parent.left
+        anchors.leftMargin: 12
+        anchors.top: txtState.bottom
+        anchors.topMargin: 8
+        wrapMode: Text.WordWrap
+        font.pixelSize: 16
+    }
+
+    TextField {
+        id: txtFieldAlliance
+        color: "#000"
+        text: qStr("Bündnis 0")
+        anchors.left: parent.left
+        anchors.leftMargin: 12
+        anchors.top: txtState.bottom
+        anchors.topMargin: 8
+        wrapMode: Text.WordWrap
+        enabled: false
+        visible: false
+        selectByMouse: true
+        font.pointSize: 12
+        maximumLength: 12
+        placeholderText: "Allianz"
+
+        Keys.onReturnPressed: {
+            changeEditAlliance()
         }
 
-        Text {
-            id: txtMilitary
-            color: "#ffffff"
-            text: qsTr("1.234.567")
-            anchors.left: txtMilitaryText.right
-            anchors.leftMargin: 30
-            anchors.top: txtMilitaryText.top
-            anchors.topMargin: 0
-            font.pixelSize: 16
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.NoButton
+            cursorShape: Qt.IBeamCursor
         }
+    }
 
-        Image {
-            id: imgAtomicbomb
-            x: 247
-            width: 45
-            height: 45
-            anchors.top: parent.top
-            anchors.topMargin: 8
-            anchors.right: parent.right
-            anchors.rightMargin: 8
-            source: "qrc:/img/atomic.png"
-        }
+    Text {
+        id: txtMilitaryText
+        color: "#ffffff"
+        text: qsTr("Militär:")
+        anchors.top: txtFieldAlliance.bottom
+        anchors.topMargin: 12
+        anchors.left: txtState.left
+        anchors.leftMargin: 0
+        font.pixelSize: 16
+    }
 
-        Image {
-            id: imgRocket
-            x: 247
-            width: 45
-            height: 45
-            anchors.top: imgAtomicbomb.bottom
-            anchors.topMargin: 8
-            anchors.right: parent.right
-            anchors.rightMargin: 8
-            source: "qrc:/img/rocket.png"
-        }
+    Text {
+        id: txtMilitary
+        color: "#ffffff"
+        text: qsTr("1.234.567")
+        anchors.left: txtMilitaryText.right
+        anchors.leftMargin: 30
+        anchors.top: txtMilitaryText.top
+        anchors.topMargin: 0
+        font.pixelSize: 16
+    }
 
-        Image {
-            id: imgSatellite
-            x: 247
-            width: 45
-            height: 45
-            anchors.top: imgRocket.bottom
-            anchors.topMargin: 8
-            anchors.right: parent.right
-            anchors.rightMargin: 8
-            source: "qrc:/img/satelite.png"
-        }
+    Image {
+        id: imgAtomicbomb
+        x: 247
+        width: 45
+        height: 45
+        anchors.top: parent.top
+        anchors.topMargin: 8
+        anchors.right: parent.right
+        anchors.rightMargin: 8
+        source: "qrc:/img/atomic.png"
+    }
+
+    Image {
+        id: imgRocket
+        x: 247
+        width: 45
+        height: 45
+        anchors.top: imgAtomicbomb.bottom
+        anchors.topMargin: 8
+        anchors.right: parent.right
+        anchors.rightMargin: 8
+        source: "qrc:/img/rocket.png"
+    }
+
+    Image {
+        id: imgSatellite
+        x: 247
+        width: 45
+        height: 45
+        anchors.top: imgRocket.bottom
+        anchors.topMargin: 8
+        anchors.right: parent.right
+        anchors.rightMargin: 8
+        source: "qrc:/img/satelite.png"
+    }
+
+    Text {
+        id: txtMuster
+        color: "#ffffff"
+        text: qsTr("Staatsmuster")
+        anchors.left: txtState.left
+        anchors.leftMargin: 0
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 10
+        font.pixelSize: 16
     }
 }

@@ -21,7 +21,7 @@ Rectangle {
             height: 30
             anchors.fill: parent
 
-            onClicked: stackView.pop()
+            onClicked: goBack()
         }
     }
 
@@ -146,8 +146,14 @@ Rectangle {
         return n === +n && n === (n|0);
     }
 
+    property int stateid: -1
     function askBeforeAccept(id) {
+        stateid = id
         network.getNameFor(id)
+    }
+
+    function goBack() {
+        stackView.pop()
     }
 
     BusyIndicator {
@@ -170,17 +176,35 @@ Rectangle {
 
         property string stateName: ""
 
+        onAboutToShow: {
+            if (stateName === "") {
+                btn_popup_yes.visible = false
+                txt_popup.text = "Kein Staat gefunden!"
+            } else {
+                btn_popup_yes.visible = true
+                txt_popup.text = stateName + " hinzufügen?"
+            }
+        }
+
         ColumnLayout {
             spacing: 5
             Text {
+                id: txt_popup
                 font.pixelSize: 14
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: popup.stateName + " hinzufügen?"
+                text: ""
             }
 
             RowLayout {
+                anchors.horizontalCenter: parent.horizontalCenter
                 Button {
+                    id: btn_popup_yes
                     text: "Ja"
+                    onClicked: {
+                        network.getCountryFor(root.stateid, txtAlliance.text)
+                        popup.close();
+                        goBack()
+                    }
                 }
                 Button {
                     text: "Abbrechen"

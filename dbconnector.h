@@ -16,7 +16,7 @@
 class DBConnector : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString token READ getToken())
+
 
 public:
     DBConnector(QObject *parent = 0);
@@ -28,8 +28,12 @@ public:
     QSqlError lastError() const;
 
     QString getToken() const;
-    Q_INVOKABLE void writeToken(const QString &token) const;
+    void writeToken(const QString &token) const;
+
     QList<Country *> getCountries() const;
+    void addCountry(Country* country) const;
+    void updateCountry(Country* country) const;
+    void writeCountries(QList<Country*> countries) const;
 
 private:
     QSqlDatabase db;

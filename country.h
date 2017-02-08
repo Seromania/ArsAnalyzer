@@ -8,6 +8,7 @@ class Country : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int ID READ getID WRITE setID NOTIFY idChanged)
+    Q_PROPERTY(QString Muster READ getMuster NOTIFY musterChanged)
     Q_PROPERTY(int HasAtomic READ getHasAtomic WRITE setHasAtomic NOTIFY hasAtomicChanged)
     Q_PROPERTY(int HasRocket READ getHasRocket WRITE setHasRocket NOTIFY hasRocketChanged)
     Q_PROPERTY(int HasSatellite READ getHasSatellite WRITE setHasSatellite NOTIFY hasRocketChanged)
@@ -20,6 +21,10 @@ public:
 
     void setID(const int& id);
     int getID() const;
+
+    void setMuster(const int& muster);
+    QString getMuster() const;
+    int getMusterInt() const;
 
     void setHasAtomic(const bool& hasAtomic);
     bool getHasAtomic() const;
@@ -42,6 +47,7 @@ public:
     void print() const;
 signals:
     void idChanged(int);
+    void musterChanged(QString);
     void hasAtomicChanged(bool);
     void hasRocketChanged(bool);
     void hasSatelliteChanged(bool);
@@ -51,6 +57,7 @@ signals:
 
 private:
     int m_id;
+    int m_muster;
     bool m_hasAtomic;
     bool m_hasRocket;
     bool m_hasSatellite;

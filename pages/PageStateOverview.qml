@@ -8,7 +8,7 @@ Rectangle {
     id: root
     color: "#1d1d1d"
 
-    Component.onCompleted: txtToken.text = dbCon.token
+    Component.onCompleted: txtToken.text = network.token
 
     Image {
         z: 1
@@ -65,9 +65,9 @@ Rectangle {
         width: 40
         height: 40
         anchors.right: parent.right
-        anchors.rightMargin: 15
+        anchors.rightMargin: 8
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 15
+        anchors.bottomMargin: 10
 
         source: "qrc:/img/ic_add_circle_white_3x.png"
         smooth: true
@@ -76,8 +76,6 @@ Rectangle {
             anchors.fill: parent
             onClicked: {
                 stackView.push("qrc:/Pages/PageAddState.qml")
-                //network.test()
-                //countryModel.addCountry(1234);
             }
 
         }
@@ -107,12 +105,14 @@ Rectangle {
 
         delegate: ElemStateOverview {
             txtState: model.name
-            txtAlliance: model.alliance
+            txtAlliance: (model.alliance === "") ? "Keine Allianz" : model.alliance
+            txtFieldAlliance: model.alliance
             txtMilitary: model.military.toLocaleString(Qt.locale("de_DE"))
             imgSatelliteVisible: model.hasSatellite
             imgRocketVisible: model.hasRocket
             imgAtomicbombVisible: model.hasAtomic
             stateid: model.id
+            txtMuster: model.muster
         }
 
 

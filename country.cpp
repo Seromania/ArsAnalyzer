@@ -3,6 +3,7 @@
 Country::Country(QObject *parent)
     : QObject(parent)
     , m_id(-1)
+    , m_muster(0)
     , m_hasAtomic(false)
     , m_hasRocket(false)
     , m_hasSatellite(false)
@@ -22,6 +23,39 @@ void Country::setID(const int &id) {
 }
 int Country::getID() const {
     return m_id;
+}
+
+void Country::Country::setMuster(const int& muster) {
+    if (muster == m_muster)
+        return;
+
+    m_muster = muster;
+    emit musterChanged(getMuster());
+}
+QString Country::getMuster() const {
+    switch (m_muster) {
+    case 1:
+        return "Industriemacht";
+    case 2:
+        return "Supermacht";
+    case 3:
+        return "Schwellenland";
+    case 4:
+        return "Postkommunistisch";
+    case 5:
+        return "Industrieland";
+    case 6:
+        return "Fundamentalistisch";
+    case 7:
+        return "Entwicklungsland";
+    case 8:
+        return "Finanzmacht";
+    }
+
+    return "Unbekanntes Muster";
+}
+int Country::getMusterInt() const {
+    return m_muster;
 }
 
 void Country::setMilitary(const float &military) {
@@ -99,4 +133,5 @@ void Country::print() const {
     qDebug() << "Has Atombomb.: " << m_hasAtomic;
     qDebug() << "Has Rocket...: " << m_hasRocket;
     qDebug() << "Has Satellite: " << m_hasSatellite;
+    qDebug() << "Muster.......: " << getMuster();
 }
