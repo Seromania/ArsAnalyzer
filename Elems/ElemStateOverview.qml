@@ -19,6 +19,8 @@ Rectangle {
     readonly property int topBottomMargin: 5
     readonly property int leftRightMargin: 3
 
+    signal deleteStateClicked(int stateid)
+
     width: 300
     height: 180
 
@@ -102,9 +104,8 @@ Rectangle {
         font.pixelSize: 16
     }
 
-    Text {
+    AnimText {
         id: txtEditAlliance
-        color: "#9D0808"
         text: qsTr("Editieren")
         anchors.left: txtState.right
         anchors.leftMargin: 12
@@ -112,39 +113,23 @@ Rectangle {
         wrapMode: Text.WordWrap
         font.pixelSize: 12
 
-        PropertyAnimation {
-            id: clickAnimClicked
-            target: txtEditAlliance
-            property: "color"
-            to: "#FFF"
-            duration: 200
+        onClicked: {
+            changeEditAlliance()
         }
+    }
 
-        PropertyAnimation {
-            id: clickAnimUnclicked
-            target: txtEditAlliance
-            property: "color"
-            to: "#9D0808"
-            duration: 200
-        }
+    AnimText {
+        id: txtDeleteCountry
+        text: qsTr("Löschen")
+        anchors.left: txtEditAlliance.right
+        anchors.leftMargin: 8
+        anchors.bottom: txtEditAlliance.bottom
+        anchors.bottomMargin: 0
+        wrapMode: Text.WordWrap
+        font.pixelSize: 12
 
-
-        MouseArea {
-            anchors.fill: parent
-
-            onPressed: {
-                clickAnimUnclicked.stop()
-                clickAnimClicked.start()
-            }
-
-            onClicked: {
-                changeEditAlliance()
-            }
-
-            onReleased: {
-                clickAnimClicked.stop()
-                clickAnimUnclicked.start()
-            }
+        onClicked: {
+            deleteStateClicked(stateid)
         }
     }
 

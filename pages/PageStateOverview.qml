@@ -113,6 +113,13 @@ Rectangle {
             imgAtomicbombVisible: model.hasAtomic
             stateid: model.id
             txtMuster: model.muster
+
+            onDeleteStateClicked: {
+                deletePopUp.stateName = model.name
+                deletePopUp.stateID = model.id
+                console.log("ID: " + model.id)
+                deletePopUp.open()
+            }
         }
 
 
@@ -129,6 +136,59 @@ Rectangle {
         anchors.bottomMargin: 3
 
         onClicked: stackView.pop();
+    }
+
+    Popup {
+        id: deletePopUp
+
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+
+        focus: true
+        modal: false
+
+        property string stateName: ""
+        property int stateID: -1
+
+        onAboutToShow: {
+            if (stateName === "") {
+                btn_popup_yes.visible = false
+                txt_popup.text = "Kein Staat zum löschen!"
+            } else {
+                btn_popup_yes.visible = true
+                txt_popup.text = stateName + " löschen?"
+            }
+        }
+
+        ColumnLayout {
+            spacing: 5
+            Text {
+                id: txt_popup
+                font.pixelSize: 14
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: ""
+            }
+
+            RowLayout {
+                anchors.horizontalCenter: parent.horizontalCenter
+                Button {
+                    id: btn_popup_yes
+                    text: "Ja"
+                    onClicked: {
+                        console.log("Delete: " + deletePopUp.stateName + ", " + deletePopUp.stateID)
+                        countryModel.deleteCountry(deletePopUp.stateID)
+                        deletePopUp.close()
+
+                    }
+                }
+                Button {
+                    text: "Abbrechen"
+                    onClicked: deletePopUp.close()
+                }
+            }
+
+
+        }
     }
 
 }

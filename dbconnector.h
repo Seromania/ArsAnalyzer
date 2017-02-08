@@ -34,6 +34,7 @@ public:
     void addCountry(Country* country) const;
     void updateCountry(Country* country) const;
     void writeCountries(QList<Country*> countries) const;
+    void deleteCountry(Country* country) const;
 
 private:
     QSqlDatabase db;

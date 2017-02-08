@@ -23,6 +23,7 @@ public:
     void getCountriesFromDB();
 
     Q_INVOKABLE void updateCountriesAlliance(const int& id, const QString& alliance);
+    Q_INVOKABLE void deleteCountry(const int& id);
 
 signals:
 

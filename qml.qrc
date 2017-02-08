@@ -16,5 +16,6 @@
         <file>sxsystems.db</file>
         <file>Pages/PageAddState.qml</file>
         <file>img/ic_arrow_back_white_24dp_1x.png</file>
+        <file>Elems/AnimText.qml</file>
     </qresource>
 </RCC>

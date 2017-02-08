@@ -179,3 +179,16 @@ void DBConnector::updateCountry(Country *country) const {
 void DBConnector::writeCountries(QList<Country *> countries) const {
 
 }
+
+void DBConnector::deleteCountry(Country *country) const
+{
+    QString pID = QString::number(country->getID());
+    QString pQuery = "";
+    pQuery += "DELETE FROM tblCountry WHERE ID=" + pID + ";";
+
+    QSqlQuery query;
+
+    if(!query.exec(pQuery)) {
+        qDebug() << "Error Deleting: " << query.lastError().text();
+    }
+}

@@ -39,3 +39,9 @@ HEADERS += \
     network.h \
     country.h \
     countrymanager.h
+
+VERSION = 0.0.2
+QMAKE_TARGET_COMPANY = Sero
+QMAKE_TARGET_PRODUCT = ArsAnalyzer
+QMAKE_TARGET_DESCRIPTION = Ars Analyzer by Sero
+QMAKE_TARGET_COPYRIGHT = (c)2017 Sero

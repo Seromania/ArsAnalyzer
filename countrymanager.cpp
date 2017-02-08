@@ -46,6 +46,22 @@ void CountryManager::updateCountriesAlliance(const int &id, const QString &allia
     }
 }
 
+void CountryManager::deleteCountry(const int &id)
+{
+    int indx = 0;
+    for(Country* country : m_lstCountries) {
+        if (country->getID() == id) {
+            m_dbcon.data()->deleteCountry(country);
+
+            beginRemoveRows(QModelIndex(), indx, indx);
+            m_lstCountries.removeAt(indx);
+            endRemoveRows();
+            return;
+        }
+        indx++;
+    }
+}
+
 void CountryManager::onGotCountry(Country *country) {
     country->print();
 
